@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Melkers 3D Verkstad</title>
+
+<style>
+:root{
+  --bg:#0f1720;
+  --panel:#18212c;
+  --text:#f1f5f9;
+  --muted:#94a3b8;
+  --blue:#2563eb;
+  --blue2:#1d4ed8;
+  --accent:#f59e0b;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+header{
+  background:linear-gradient(135deg,#1e3a8a,#0f172a);
+  min-height:300px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.header-content{padding:20px;}
+
+h1{
+  margin:0;
+  font-size:3rem;
+  letter-spacing:1px;
+}
+
+.subtitle{
+  color:#dbeafe;
+  font-size:1.2rem;
+  margin-top:10px;
+}
+
+nav{
+  background:#111827;
+  position:sticky;
+  top:0;
+  z-index:10;
+  border-bottom:1px solid #1e293b;
+}
+
+nav ul{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+nav a{
+  display:block;
+  padding:15px 20px;
+  color:white;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+nav a:hover{
+  background:#1e293b;
+  color:#60a5fa;
+}
+
+section{
+  max-width:1150px;
+  margin:auto;
+  padding:60px 20px;
+}
+
+section h2{
+  text-align:center;
+  margin-bottom:35px;
+  font-size:2rem;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid #243244;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,0.4);
+  display:flex;
+  flex-direction:column;
+}
+
+.card-img-src {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 1px solid #243244;
+}
+
+.card-content{
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  flex-grow:1;
+}
+
+.card h3{
+  margin:0 0 10px 0;
+  font-size:1.3rem;
+}
+
+.card p{
+  color:var(--muted);
+  font-size:0.9rem;
+  line-height:1.5;
+  margin:0 0 15px 0;
+  flex-grow:1;
+}
+
+.price-tag {
+  font-size:1.4rem;
+  font-weight:bold;
+  color:var(--accent);
+  margin-bottom:15px;
+}
+
+.order-btn {
+  background:var(--blue);
+  color:white;
+  border:none;
+  padding:12px;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:background 0.2s;
+  width:100%;
+}
+
+.order-btn:hover {
+  background:var(--blue2);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  padding: 12px;
+  background-color: #0f1720;
+  color: var(--text);
+  border: 1px solid #243244;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+
+textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+select:disabled {
+  background-color: #0b0f14;
+  color: #475569;
+  border-color: #1e293b;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--panel);
+  border: 1px solid #243244;
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.close-modal {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-modal:hover {
+  color: var(--text);
+}
+
+.custom-form-box {
+  background: var(--panel);
+  border: 1px solid #243244;
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.custom-form-box label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.hidden-field {
+  display: none !important;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <h1>Melkers 3D Verkstad</h1>
+    <div class="subtitle">3D-printade produkter • STL-filer • Specialbeställningar</div>
+  </div>
+</header>
+
+<nav>
+  <ul>
+    <li><a href="#produkter">Produkter</a></li>
+    <li><a href="#stl">STL-filer</a></li>
+    <li><a href="#special">Specialjobb</a></li>
+    <li><a href="#om">Om mig</a></li>
+  </ul>
+</nav>
+
+<!-- SEKTION: PRODUKTER -->
+<section id="produkter">
+  <h2>3D-printade produkter</h2>
+  <div class="grid">
+    <div class="card">
+      <img src="TP.link.archer.MR400.väggfäste_print.jpg" alt="Routerfäste" class="card-img-src">
+      <div class="card-content">
+        <h3>Routerfäste TP-Link Archer MR400</h3>
+        <p>Stabilt väggfäste med enkel montering. Printas som standard i PETG men går även att få i PLA.</p>
+        <div class="price-tag">85 kr</div>
+        <button class="order-btn" onclick="oppnaPopup('Routerfäste TP-Link Archer MR400', 85)">Beställ</button>
+      </div>
+    </div>
+    <div class="card">
+      <img src="1.9-R104x35-inserts.png" alt="RC-delar" class="card-img-src">
+      <div class="card-content">
+        <h3>1.9 R104x35 Däck inlägg</h3>
+        <p>Däck inlägg för 1.9 crawler däck, egen design.</p>
+        <div class="price-tag">199 kr</div>
+        <button class="order-btn" onclick="oppnaPopup('1.9 R104x35 Däck inlägg', 199)">Beställ</button>
+      </div>
+    </div>
+    <div class="card">
+      <img src="RC-group.png" alt="RC-delar" class="card-img-src">
+      <div class="card-content">
+        <h3>RC-delar</h3>
+        <p>Anpassade delar och reservdelar för crawler, bilar och andra hobbyprojekt efter dina önskemål.</p>
+        <div class="price-tag">Pris diskuteras</div>
+        <button class="order-btn" onclick="oppnaPopup('RC-delar (Pris diskuteras)', 1)">Fråga om pris</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEKTION: STL-FILER -->
+<section id="stl" style="background:#111827; border-top: 1px solid #1e293b; border-bottom: 1px solid #1e293b;">
+  <h2>Digitala STL-filer</h2>
+  <p style="text-align:center; color:var(--muted); margin-top:-20px; margin-bottom:40px;">Efter betalning skickas nedladdningslänk via Sprend till din e-postadress. För privat bruk.</p>
+  <div class="grid">
+    <div class="card" style="background:var(--bg);">
+      <img src="TP.link.archer.MR400.väggfäste_stl.png" alt="Routerfäste STL" class="card-img-src">
+      <div class="card-content">
+        <h3>STL: Routerfäste TP-Link Archer MR400</h3>
+        <p>Skriv ut ditt fäste själv på din egen 3D-skrivare.</p>
+        <div class="price-tag">40 kr</div>
+        <button class="order-btn" onclick="oppnaPopup('STL: Routerfäste TP-Link Archer MR400', 40)">Beställ fil</button>
+      </div>
+    </div>
+    <div class="card" style="background:var(--bg);">
+      <img src="1.9-R104x35-inserts.png" alt="Crawler inserts STL" class="card-img-src">
+      <div class="card-content">
+        <h3>STL: Crawler inserts</h3>
+        <p>Egen designad inserts för 1.9 däck till crawler. printas i förslagsvis PETG.</p>
+        <div class="price-tag">50 kr</div>
+        <button class="order-btn" onclick="oppnaPopup('STL: Crawler inserts', 50)">Beställ fil</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEKTION: SPECIALBESTÄLLNING -->
+<section id="special">
+  <h2>Specialbeställning</h2>
+  <p style="text-align:center; color:var(--muted); margin-top:-20px; margin-bottom:40px;">Skicka mått, bild eller skiss så återkommer jag med prisförslag innan något tillverkas.</p>
+  <div class="custom-form-box">
+    <!-- BYT UT LÄNKEN HÄR SEN MOT DITT FORMSPREE-ID -->
+   <form action="mailto:Mikael86melker@gmail.com" method="POST" enctype="text/plain">
+  <input type="text" name="Namn" placeholder="Namn" required>
+  <input type="email" name="E-post" placeholder="E-post" required>
+  <input type="tel" name="Telefon" placeholder="Telefon">
+  <textarea name="Vad vill du ha tillverkat?" placeholder="Vad vill du ha tillverkat?" required></textarea>
+  <input type="text" name="Mått (mm)" placeholder="Mått (mm)">
+
+  <label for="spec-material">Material</label>
+  <select id="spec-material" name="Material" onchange="matchaFarger('spec-material', 'spec-farg')" required>
+    <option value="">-- Välj material --</option>
+    <option value="PLA">PLA</option>
+    <option value="PETG">PETG</option>
+    <option value="PCTG">PCTG</option>
+    <option value="TPU">TPU</option>
+    <option value="Vet ej">Vet ej / Förslag?</option>
+  </select>
+
+  <label for="spec-farg">Färg</label>
+  <select id="spec-farg" name="Färg" disabled required>
+    <option value="">Välj material först...</option>
+  </select>
+
+  <button type="submit" class="order-btn" style="background:var(--accent); color:#111827; margin-top:10px;">Skicka förfrågan</button>
+</form>
+
+  </div>
+</section>
+<!-- SEKTION: OM MIG -->
+<section id="om" style="background:#111827; border-top: 1px solid #1e293b; padding-bottom:80px;">
+  <div style="max-width:700px; margin:0 auto; text-align:center;">
+    <h2>Om mig</h2>
+    <p style="line-height:1.6; color:#cbd5e1;">Filament och maskiner i garage-fokus! Jag heter <strong>Mikael</strong> och driver en liten 3D-verkstad i Västergötland.
+      Jag gillar praktiska lösningar, mekanik och att ta fram delar som faktiskt används i vardagen.</p>
+      <p>
+      Här hittar du både färdiga produkter och specialanpassade lösningar för hobby, garage, lantbruk och hem.
+    </p>
+    <div style="margin-top:40px; padding:20px; background:var(--panel); border-radius:12px; border:1px solid #243244; display:inline-block; text-align:left;">
+      <strong style="color:var(--accent); display:block; margin-bottom:5px;">Kontakt & Swish</strong>
+      E-post: Mikael86melker@gmail.com<br>
+    </div>
+  </div>
+</section>
+
+<footer style="text-align:center; padding:30px; color:var(--muted); font-size:0.9rem; border-top:1px solid #1e293b;">
+  © 2026 Melkers 3D Verkstad
+</footer>
+
+<!-- MODAL / POPUP RUTAN -->
+<div id="orderModal" class="modal-overlay">
+  <div class="modal-content">
+    <button class="close-modal" onclick="stangPopup()">×</button>
+    <h2>Beställ produkt</h2>
+
+    <!-- BYT UT LÄNKEN HÄR SEN MOT DITT FORMSPREE-ID -->
+    <form action="mailto:Mikael86melker@gmail.com" method="POST" enctype="text/plain">
+
+  <!-- Denna rad visar artikeln för kunden OCH skickar med det i mailet -->
+  <label style="font-size:0.9rem; color:var(--muted); display:block; margin-bottom:5px;">Vald produkt</label>
+  <input type="text" id="hiddenProduct" name="Artikel" readonly style="background:#111827; color:var(--accent); font-weight:bold; cursor:not-allowed;">
+
+  <label for="orderName" style="font-size:0.9rem; color:var(--muted); display:block; margin-bottom:5px;">Namn</label>
+  <input type="text" id="orderName" name="Kundens Namn" required>
+
+  <label for="orderEmail" style="font-size:0.9rem; color:var(--muted); display:block; margin-bottom:5px;">E-post</label>
+  <input type="email" id="orderEmail" name="Kundens E-post" required>
+
+  <label id="label-quantity" for="orderQuantity" style="font-size:0.9rem; color:var(--muted); display:block; margin-bottom:5px;">Antal</label>
+  <input type="number" id="orderQuantity" name="Antal" value="1" min="1" oninput="raknaUtTotal()">
+
+  <label id="label-material" for="prod-material" style="font-size:0.9rem; color:var(--muted); display:block; margin-bottom:5px;">Material</label>
+  <select id="prod-material" name="Material" onchange="matchaFarger('prod-material', 'prod-farg')" required>
+    <option value="">-- Välj material --</option>
+    <option value="PLA">PLA (Standard)</option>
+    <option value="PETG">PETG (Tålig/Väderbeständig)</option>
+    <option value="PCTG">PCTG (Extra slagtålig)</option>
+    <option value="TPU">TPU (Flexibel/Gummi)</option>
+    <option value="Vet ej">Vet ej / Förslag?</option>
+  </select>
+
+  <label id="label-farg" for="prod-farg" style="font-size:0.9rem; color:var(--muted); display:block; margin-bottom:5px;">Färg</label>
+  <select id="prod-farg" name="Färg" disabled required>
+    <option value="">Välj material först...</option>
+  </select>
+
+  <label for="orderMessage" style="font-size:0.9rem; color:var(--muted); display:block; margin-bottom:5px;">Meddelande (Frivilligt)</label>
+  <textarea id="orderMessage" name="Meddelande"></textarea>
+
+  <div style="font-size:1.4rem; font-weight:bold; margin:20px 0; color:var(--accent);">
+    Totalt: <span id="totalPrice">0</span> kr
+  </div>
+
+  <button type="submit" class="order-btn">Skicka beställning via E-post</button>
+</form>
+
+    <div style="margin-top:25px; padding-top:20px; border-top:1px solid #243244; text-align:center;">
+      <h3 style="margin:0 0 10px 0; font-size:1rem;">Betala med Swish</h3>
+      <p style="font-size:0.85rem; color:var(--muted); margin:0 0 10px 0;">Scanna QR-koden eller swisha efter inskickad beställning.</p>
+      <div style="background:#ffffff; padding:15px; border-radius:12px; display:inline-block; box-shadow:0 4px 10px rgba(0,0,0,0.2);">
+        <img src="swish-qr.png" alt="Swish QR" style="width:140px; height:140px; display:block; margin:0 auto 10px auto;">
+        <span style="color:#111827; font-size:1.1rem; font-weight:bold; display:block;">0734 200 868</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const minaFarger = {
+  "PLA": ["Svart", "Vit", "Rosa", "Röd", "Blå", "Lila"],
+  "PETG": ["Svart", "silver", "Semi transparent grön", "Semi transparent röd","Semi transparent lila"],
+  "PCTG": ["Navy blue (Slagtålig)"],
+  "TPU": ["Blå (Mjuk/Gummi)"],
+  "Vet ej": ["Återkopplar om lämplig material/färg utifrån delens syfte"]
+};
+
+let aktuelltStyckpris = 0;
+
+function oppnaPopup(produktNamn, pris) {
+  aktuelltStyckpris = pris;
+
+  document.getElementById("orderModal").classList.add("active");
+
+  // FIXAT: Denna rad sätter nu produktnamnet i textrutan som skickas med i mailet!
+  document.getElementById("hiddenProduct").value = produktNamn;
+
+  document.getElementById("orderQuantity").value = 1;
+
+  const matLabel = document.getElementById("label-material");
+  const matSelect = document.getElementById("prod-material");
+  const fargLabel = document.getElementById("label-farg");
+  const fargSelect = document.getElementById("prod-farg");
+  const qtyLabel = document.getElementById("label-quantity");
+  const qtyInput = document.getElementById("orderQuantity");
+
+  if (produktNamn.includes("STL")) {
+    matLabel.classList.add("hidden-field");
+    matSelect.classList.add("hidden-field");
+    fargLabel.classList.add("hidden-field");
+    fargSelect.classList.add("hidden-field");
+    qtyLabel.classList.add("hidden-field");
+    qtyInput.classList.add("hidden-field");
+
+    matSelect.removeAttribute("required");
+    fargSelect.removeAttribute("required");
+
+    qtyInput.value = 1;
+    matSelect.value = "Digital fil (STL)";
+    fargSelect.value = "Ingen färg (Digital)";
+  } else {
+    matLabel.classList.remove("hidden-field");
+    matSelect.classList.remove("hidden-field");
+    fargLabel.classList.remove("hidden-field");
+    fargSelect.classList.remove("hidden-field");
+    qtyLabel.classList.remove("hidden-field");
+    qtyInput.classList.remove("hidden-field");
+
+    matSelect.setAttribute("required", "required");
+    fargSelect.setAttribute("required", "required");
+
+    matSelect.value = "";
+    fargSelect.innerHTML = '<option value="">Välj material först...</option>';
+    fargSelect.disabled = true;
+  }
+  raknaUtTotal();
+}
+
+
+function stangPopup() {
+  document.getElementById("orderModal").classList.remove("active");
+}
+
+window.onclick = function(event) {
+  const modal = document.getElementById("orderModal");
+  if (event.target === modal) { stangPopup(); }
+}
+
+function matchaFarger(materialId, fargId) {
+  const materialDropdown = document.getElementById(materialId);
+  const fargDropdown = document.getElementById(fargId);
+  const valtMaterial = materialDropdown.value;
+
+  fargDropdown.innerHTML = "";
+
+  if (valtMaterial === "" || valtMaterial === "Vet ej") {
+    const nollAlternativ = document.createElement("option");
+    if(valtMaterial === "Vet ej") {
+      nollAlternativ.text = "Återkopplar om lämplig material/färg utifrån delens syfte";
+      nollAlternativ.value = "Återkopplar om lämplig material/färg utifrån delens syfte";
+      fargDropdown.add(nollAlternativ);
+      fargDropdown.disabled = false;
+    } else {
+      nollAlternativ.text = "Välj material först...";
+      nollAlternativ.value = "";
+      fargDropdown.add(nollAlternativ);
+      fargDropdown.disabled = true;
+    }
+    return;
+  }
+
+  fargDropdown.disabled = false;
+  const standardAlternativ = document.createElement("option");
+  standardAlternativ.text = "-- Välj en färg --";
+  standardAlternativ.value = "";
+  fargDropdown.add(standardAlternativ);
+
+  const aktuellaFarger = minaFarger[valtMaterial];
+  if (aktuellaFarger) {
+    aktuellaFarger.forEach(function(farg) {
+      const nyttVal = document.createElement("option");
+      nyttVal.text = farg;
+      nyttVal.value = farg;
+      fargDropdown.add(nyttVal);
+    });
+  }
+}
+
+function raknaUtTotal() {
+  const antal = parseInt(document.getElementById("orderQuantity").value) || 1;
+  const totalt = aktuelltStyckpris * antal;
+  document.getElementById("totalPrice").innerText = totalt;
+}
+
+// Funktion för Specialbeställningar
+function skickaSpecialMejl(event) {
+  event.preventDefault(); // Hindrar sidan från att laddas om
+
+  const namn = document.getElementById("specName").value;
+  const epost = document.getElementById("specEmail").value;
+  const tel = document.getElementById("specPhone").value || "Ej angivet";
+  const meddelande = document.getElementById("specMsg").value;
+  const matt = document.getElementById("specMått").value || "Ej angivet";
+  const material = document.getElementById("spec-material").value;
+  const farg = document.getElementById("spec-farg").value;
+
+  const amne = encodeURIComponent("Specialbeställning - Melkers 3D Verkstad");
+  const innehall = encodeURIComponent(
+    "Hej Mikael!\n\n" +
+    "Jag vill göra en förfrågan om en specialbeställning.\n\n" +
+    "Namn: " + namn + "\n" +
+    "E-post: " + epost + "\n" +
+    "Telefon: " + tel + "\n" +
+    "Mått: " + matt + "\n" +
+    "Önskat material: " + material + "\n" +
+    "Önskat färg: " + farg + "\n\n" +
+    "Beskrivning:\n" + meddelande
+  );
+
+  // Öppnar kundens e-postprogram med all info ifylld
+  window.location.href = "mailto:Mikael86melker@gmail.com" + amne + "&body=" + innehall;
+}
+
+// Funktion för Produktbeställningar (Popupen)
+function skickaProduktMejl(event) {
+  event.preventDefault(); // Hindrar sidan från att laddas om
+
+  const produkt = document.getElementById("product-name-display").innerText;
+  const namn = document.getElementById("orderName").value;
+  const epost = document.getElementById("orderEmail").value;
+  const antal = document.getElementById("orderQuantity").value;
+  const material = document.getElementById("prod-material").value;
+  const farg = document.getElementById("prod-farg").value;
+  const meddelande = document.getElementById("orderMessage").value || "Inget extra meddelande.";
+  const totalPris = document.getElementById("totalPrice").innerText;
+
+  const amne = encodeURIComponent("Beställning: " + produkt + " - Melkers 3D Verkstad");
+  const innehall = encodeURIComponent(
+    "Hej Mikael!\n\n" +
+    "Jag vill göra en beställning från din hemsida.\n\n" +
+    "Produkt: " + produkt + "\n" +
+    "Antal: " + antal + " st\n" +
+    "Material: " + material + "\n" +
+    "Färg: " + farg + "\n" +
+    "Uträknat totalpris: " + totalPris + " kr\n\n" +
+    "Kunduppgifter:\n" +
+    "Namn: " + namn + "\n" +
+    "E-post: " + epost + "\n\n" +
+    "Meddelande/Instruktioner:\n" + meddelande
+  );
+
+  // Öppnar kundens e-postprogram
+  window.location.href = "mailto:Mikael86melker@gmail.com" + amne + "&body=" + innehall;
+
+  stangPopup(); // Stänger ner popupen efteråt
+}
+</script>
+</body>
+</html>
