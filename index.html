@@ -278,6 +278,7 @@ select:disabled {
     <li><a href="#stl">STL-filer</a></li>
     <li><a href="#special">Specialjobb</a></li>
     <li><a href="#om">Om mig</a></li>
+    <li><a href="#Guide">Foto guide</a></li>
   </ul>
 </nav>
 
@@ -500,8 +501,8 @@ select:disabled {
   <input type="text" name="Namn" placeholder="Namn" required>
   <input type="email" name="E-post" placeholder="E-post" required>
   <input type="tel" name="Telefon" placeholder="Telefon">
-  <textarea name="Vad vill du ha tillverkat?" placeholder="Vad vill du ha tillverkat?" required></textarea>
-  <input type="text" name="Mått (mm)" placeholder="Mått (mm)">
+  <textarea name="Vad vill du ha tillverkat?" placeholder="Vad vill du ha tillverkat? Bilder med mått är att föredra" required></textarea>
+  <input type="text" name="Mått (mm)" placeholder="Mått (exempel BxHxD mm)">
 
   <label for="spec-material">Material</label>
   <select id="spec-material" name="Material" onchange="matchaFarger('spec-material', 'spec-farg')" required>
@@ -539,6 +540,24 @@ select:disabled {
       <strong style="color:var(--accent); display:block; margin-bottom:5px;">Kontakt</strong>
       E-post: Mikael86melker@gmail.com<br>
     </div>
+  </div>
+</section>
+
+<!-- SEKTION: Guide -->
+<section id="Guide" style="background:#111827; border-top: 1px solid #1e293b; padding-bottom:80px;">
+  <div style="max-width:700px; margin:0 auto; text-align:center;">
+    <h2>Foto guide</h2>
+    <p style="line-height:1.6; color:#cbd5e1;">För att få så exakt mått och propotioner som möjligt så har jag en enkel foto guide.<p/>
+    Så vinkelrätt som möjligt och lägg gärna med en linjal eller liknande brediv, se exempel nedanför.
+    <a href="FotoGuide.png">
+      <img src="FotoGuide.png" alt="Foto Guide" class="card-img-src"> </a></p>
+      Detta är en helt okej bild.
+      <a href="FotoGuide2.jpg">
+      <img src="FotoGuide2.jpg" alt="Foto Guide" class="card-img-src"> </a></p>
+      Detta är en dålig bild, inte vikelrätt
+      <a href="FotoGuide3.jpg">
+      <img src="FotoGuide3.jpg" alt="Foto Guide" class="card-img-src"> </a></p>
+      På detta sätt behöver du knappt mäta detaljen för att jag ska kunna göra en 3d modell med rätt mått.
   </div>
 </section>
 
