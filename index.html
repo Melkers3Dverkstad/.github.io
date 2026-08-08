@@ -207,8 +207,9 @@ select:disabled {
   z-index: 1000;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 80px 30px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Gör skrollningen mjuk på iPhone/Safari */
 }
 
 .modal-overlay.active {
@@ -217,11 +218,11 @@ select:disabled {
 
 .modal-content {
   background: var(--panel);
-  border: 1px solid #243244;
-  padding: 30px;
-  border-radius: 16px;
+  border: 5px solid #243244;
+  padding: 80px 30px;
+  border-radius: 80px;
   max-width: 500px;
-  width: 100%;
+  width: 90%;
   position: relative;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
@@ -575,7 +576,7 @@ select:disabled {
     <form action="mailto:Mikael86melker@gmail.com" method="POST" enctype="text/plain">
 
   <!-- Denna rad visar artikeln för kunden OCH skickar med det i mailet -->
-  <label style="font-size:0.9rem; color:var(--muted); display:block; margin-bottom:5px;">Vald produkt</label>
+  <label style="font-size:0.9rem; color:var(--muted); display:block; margin-bottom:80px;">Vald produkt</label>
   <input type="text" id="hiddenProduct" name="Artikel" readonly style="background:#111827; color:var(--accent); font-weight:bold; cursor:not-allowed;">
 
   <label for="orderName" style="font-size:0.9rem; color:var(--muted); display:block; margin-bottom:5px;">Namn</label>
@@ -612,7 +613,7 @@ select:disabled {
   <button type="submit" class="order-btn">Skicka beställning via E-post</button>
 </form>
 
-    <div style="margin-top:25px; padding-top:20px; border-top:1px solid #243244; text-align:center;">
+    <div style="margin-top:-40px; padding-top:40px; border-top:-240px solid #243244; text-align:center;">
       <h3 style="margin:0 0 10px 0; font-size:1rem;">Betala med Swish</h3>
       <p style="font-size:0.85rem; color:var(--muted); margin:0 0 10px 0;">Scanna QR-koden eller swisha efter inskickad beställning.</p>
       <div style="background:#ffffff; padding:15px; border-radius:12px; display:inline-block; box-shadow:0 4px 10px rgba(0,0,0,0.2);">
